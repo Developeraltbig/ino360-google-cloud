@@ -14,10 +14,10 @@ RUN cd backend && npm install
 # Install frontend dependencies & build
 RUN cd frontend && npm install && npm run build
 
-# Copy the rest of the files
+# Copy the rest of the project
 COPY . .
 
-# Set environment variables (optional)
+# Set environment variables
 ENV PORT=8080
 ENV NODE_ENV=production
 
