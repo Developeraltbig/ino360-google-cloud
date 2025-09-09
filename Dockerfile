@@ -5,16 +5,18 @@ FROM node:20
 WORKDIR /app
 
 # Copy package.json files first (dependency caching)
+# Use ./ to copy into the current WORKDIR context for clarity
 COPY backend/package*.json ./backend/
 COPY frontend/package*.json ./frontend/
 
 # Install backend dependencies
-RUN cd backend && npm install
+# Use --only=production for smaller image size and better security
+RUN cd backend && npm install --only=production
 
 # Install frontend dependencies
 RUN cd frontend && npm install
 
-# Copy the rest of the project (including index.html)
+# Copy the rest of the project
 COPY . .
 
 # Build the frontend
@@ -24,12 +26,8 @@ RUN npm run build
 # Switch back to root app folder
 WORKDIR /app
 
-# Set environment variables
-ENV PORT=8080
+# Set Node environment to production
 ENV NODE_ENV=production
 
-# Expose the port
-EXPOSE 8080
-
-# Start backend server (must serve frontend build in production)
+# Start backend server (it will serve the frontend build)
 CMD ["node", "backend/server.js"]
